@@ -32,10 +32,17 @@ const DEG_TO_RAD = PI / 180.0;
  */
 const convertToPosition = (lon, lat) => {
     const projected = lccProjectionToGetPosition(lon, lat, MAP_INFO);
-    return {
-        x: Math.floor((projected.x + 1.5)),
-        y: Math.floor((projected.y + 1.5))
-    };
+    if (projected !== null) {
+        return {
+            x: Math.floor((projected.x + 1.5)),
+            y: Math.floor((projected.y + 1.5))
+        };
+    } else {
+        return {
+            x: null,
+            y: null
+        }
+    }
 };
 
 /**
@@ -48,6 +55,11 @@ const convertToPosition = (lon, lat) => {
  * @param {object} mapInfo map information for LCC projection
  */
 const lccProjectionToGetPosition = (lon, lat, mapInfo) => {
+    // check validation
+    if (!lon || !lat) {
+        return null;
+    }
+
     // convert parameters to radian
     const radiusOfMap = mapInfo.radiusOfMap / mapInfo.grid;
     const stdLat1 = mapInfo.stdLat1 * DEG_TO_RAD;
